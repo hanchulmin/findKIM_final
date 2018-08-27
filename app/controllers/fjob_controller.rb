@@ -36,30 +36,7 @@ class FjobController < ApplicationController
     end
     
     
-    def create
-            fjob=Fjob.find(current_user.id)
-            fjob.name=current_user.name
-            fjob.nickname=current_user.nickname
-            fjob.portfolio_img=params[:fjob_portfolio_img]
-            fjob.career=params[:fjob_career]
-            blah=""
-            params[:fjob_category].each { |a| blah+=a + " "}
-           
-            fjob.category=blah
-            fjob.contract=params[:fjob_contract]
-            date_m=""
-             params[:fjob_date].each { |a| date_m+=a + " "}
-            fjob.date=date_m
-            fjob.starttime=params[:fjob_starttime]      
-            fjob.endtime=params[:fjob_endtime]
-            fjob.timetotal=params[:fjob_timetotal]
-             home_m=""
-             params[:fjob_home_environment].each { |a| home_m+=a + " "}
-            fjob.home_environment=home_m
-            fjob.location=params[:fjob_location]
-            fjob.save
-          redirect_to :action => "show", :id => current_user.id
-    end
+    
 
     def show
         @fjob=Fjob.find(current_user.id)
@@ -134,18 +111,23 @@ class FjobController < ApplicationController
     end
     
     def search_result
-        @search_data = Fjob.where('nickname = ? OR category = ? OR location = ? OR career = ?', params[:search_want], params[:search_want], params[:search_want], params[:search_want])
+       
         if current_user.nil? == true
             @c_user = 'no resert'
         else
             @c_user=Fjob.find(current_user.id)
         end
         # @match = Match.new(params[:div_id_number])
-        @check_data = Fjob.where('contract = ?', params[:contract]).where('starttime = ?', params[:start_time]).where('endtime = ?', params[:end_time]).where('timetotal = ?', params[:working_time]).where('location = ? OR location = ?', params[:gu], params[:city]).where('date = ?, date = ?, date = ?, date = ?, date = ?, date = ?, date = ?', params[:mon], params[:tue], params[:wed], params[:thu], params[:fri], params[:sat], params[:sun]).where('category = ?, category = ?, category = ?, category = ?, category = ?, category = ?, category = ?, category = ?', params[:create], params[:write], params[:photo], params[:etc], params[:market], params[:edit], params[:trans], params[:design]).where('home_environment =?, home_environment = ?', params[:home], params[:office])
+        if params[:search_want].nil? == false
+            @search_data = Fjob.where('nickname = ? OR category = ? OR location = ? OR career = ?', params[:search_want], params[:search_want], params[:search_want], params[:search_want])
+        else
+            @check_data = Fjob.where('contract = ?', params[:contract]).where('starttime = ?', params[:start_time]).where('endtime = ?', params[:end_time]).where('timetotal = ?', params[:working_time]).where('location = ? OR location = ?', params[:gu], params[:city]).where('date = ? OR date = ? OR date = ? OR date = ? OR date = ? OR date = ? OR date = ?', params[:mon], params[:tue], params[:wed], params[:thu], params[:fri], params[:sat], params[:sun]).where('category = ? OR category = ? OR category = ? OR category = ? OR category = ? OR category = ? OR category = ? OR category = ?', params[:create], params[:write], params[:photo], params[:etc], params[:market], params[:edit], params[:trans], params[:design]).where('home_environment =? OR home_environment = ?', params[:home], params[:office])
+        end
     end
     
     def profile
+        @profile_user=User.find(params[:id])
          @p_job=Fjob.find(params[:id])
-         @p_user=User.find(params[:id])
+        
     end
   end

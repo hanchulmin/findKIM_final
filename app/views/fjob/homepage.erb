@@ -28,7 +28,6 @@
 
 </head>
 
-
 <body>
 	
 <!--navbar-->
@@ -46,19 +45,9 @@
 			<a><i class="lock icon"></i></a>
 		</span>
 	<%else current_user.nil? == false %>
-    <%if Fjob.find(current_user.id).category==""%>
-	    <span data-menuanchor="" class="menu_object" id="user_popup">
-	    	<a href ="/fjob/new"><i class="pencil alternate icon"></i></a>
-	    </span>
-   	<%else%>
-		  <span data-menuanchor="" class="menu_object">
-		    <a href="/fjob/show/<%=current_user.id%>"><i class="game icon"></i></a>
-		  </span>
-		      
 		  <span data-menuanchor="" class="menu_object" id="mypage_popup">
 		    <a><i class="user icon"></i></a>
 		  </span>
-    <%end%>
       <span data-menuanchor="" class="menu_object">
       	<a data-method="DELETE" href ="/users/sign_out" > <i class="lock open icon"></i></a>
       </span>
@@ -67,7 +56,6 @@
 
 
 <!-- popup contents -->
-
 <!--sign in popup-->
 <div class="ui login mini modal">
   <i class="close icon"></i>
@@ -80,6 +68,7 @@
 	<%= render "devise/registrations/new" %>
 </div>
 
+
 <!--my page popup -->
 <div class="ui longer modal">
 
@@ -87,13 +76,13 @@
 		<%if current_user.nil?%>
 		<%else%>
 		Hi, I'm <%= current_user.nickname %>
-		
 	</div>
 	
 	<div class="scrolling image content">
 		
 		<div class="ui medium image">
-				<img src="../assets/nan.jpg">
+			<!-- 동환이 할일 -->
+				<img src="<%= current_user.profile_img %>" onerror ="this.src='../assets/nan.jpg';" alt = 'missing image'/>
 		</div>
 	
 	  <div class="fluid description">	
@@ -105,122 +94,137 @@
 				
 			<div class="ui bottom attached tab segment" data-tab="first">
 				
-				<!-- # render "devise/registrations/edit" -->
+			<!-- user edit form -->
 			
-			
-			<div id="userupdate">
-         <form action="/fjob/user_update/<%=@fjob.id%>" method "get" >
-             이름:
-        <input type="text" name="u_name" value = "<%=current_user.name%>"><br>
-        닉네임:
-        <input type="text" name="u_nickname" value = "<%=current_user.nickname%>"><br>
-        전화번호:
-        <input type="integer" name="u_tel" value = "<%=current_user.tel%>"><br>
-        <button type="submit" class="btn btn-primary" >제출</button>
-        </form>
-      </div>
-       <div id="userupdatedd">
-            <%= current_user.name %></br>
-            <%= current_user.nickname %></br>
-            <%= current_user.email %></br>
-            <%= current_user.tel %></br>
-            <button type="submit" id="useredit" class="btn btn-primary" >수정하기</button>
-              <%= link_to "비밀번호 수정하기", :user_edit %>
-       </div>
+         <form id="userupdate" class="ui form" action="/fjob/user_update/<%=@fjob.id%>" method "get" >
+         	<div class="field">
+         		<label>NAME</label>
+         		<input type="text" name="u_name" value = "<%=current_user.name%>">
+         	</div>
+         	<div class="field">
+         		<label>NICK NAME</label>
+         		<input type="text" name="u_nickname" value = "<%=current_user.nickname%>">
+         	</div>
+         	<div class="field">
+         		<label>PHONE NUM</label>
+         		<input type="number" name="u_tel" value = "<%=current_user.tel%>">
+         	</div>
+     
+       		<button id="userupdated_button" class="ui button" type="submit">수정하기</button>
+       		</form>
+      
+      
+      <!-- 수정된 유저 정보 -->
+      
+    
+  	<div id="userupdated" class="ui left aligned segment">
+  		
+  		<div class="ui divided selection list">
+  			<a class="item">
+    			<div class="ui red horizontal label">NAME</div>
+    			<%= current_user.name %>
+  			</a>
+  			
+  			<a class="item">
+    			<div class="ui red horizontal label">NICK-N</div>
+    			<%= current_user.nickname %>
+  			</a>
+  			
+  			<a class="item">
+    			<div class="ui red horizontal label">E-MAIL</div>
+   				<%= current_user.email %>
+  			</a>
+  			
+  			<a class="item">
+    			<div class="ui red horizontal label">PHONE</div>
+    			<%= current_user.tel %>
+  			</a>
+  			
+		</div>
+			<button id="userupdate_button" class="ui button" type="submit">수정 하러 가기</button>
+      <button class="ui button"><%= link_to "비밀번호 수정하기", :user_edit %></button>
+    </div>
+    </div>
+  </div>
        
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
- <script src="//code.jquery.com/jquery.js"></script>
-				<script>
-					
-					
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+ 			<script src="//code.jquery.com/jquery.js"></script>
+				
+<script>
 $("#userupdate").hide();
 
-$("#useredit").click(function() {
-  $("#userupdatedd").hide();
+$("#userupdate_button").click(function() {
+  $("#userupdated").hide();
   $("#userupdate").show();
-  
 });
-				</script>
+
+// $("#userupdated_button").click(function() {
+//   $("#userupdated").show();
+//   $("#userupdate").hide();
+// });
+
+</script>
+
 			</div>
 			<div class="ui bottom attached tab segment" data-tab="second">
-			<!--추가정보-->
-			
-			<div class="tab-pane" id="messages">
-               
-               <h2></h2>
-               <div class="tab-pane" id="blah">
-               <hr>
-                  <form class="form" action="##" method="post" id="registrationForm">
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                              <label for="first_name"><h4>Category</h4></label><br>
-                              <%= @fjob.category%>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                            <label for="last_name"><h4>Contract</h4></label><br>
-                              <%= @fjob.contract%> month
-                          </div>
-                      </div>
-          
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                              <label for="phone"><h4>Date</h4></label><br>
-                              <%= @fjob.date%>
-                          </div>
-                      </div>
-          
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                             <label for="mobile"><h4>Time</h4></label><br>
-                              <%= @fjob.starttime%> ~ <%=@fjob.endtime%>  == Total <%=@fjob.timetotal%> hours
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                              <label for="email"><h4>Environment</h4></label><br>
-                              <% if @fjob.home_environment.include? "outsidework" %>
+				
+				  	<div id="fjobupdated" class="ui left aligned segment">
+				  		<form class="ui form" method="post" id="registrationForm">
+  							<div class="ui divided selection list">
+  								
+  								<a class="item">
+    								<div class="ui red horizontal label">CATEGORY</div>
+    								<%= @fjob.category%>
+  								</a>	
+  								
+  								<a class="item">
+    								<div class="ui red horizontal label">CONTRACT</div>
+    								<%= @fjob.contract%> month
+  								</a>
+  								
+  								<a class="item">
+    								<div class="ui red horizontal label">DATE</div>
+    								<%= @fjob.date%>
+  								</a>
+  								
+  								<a class="item">
+    								<div class="ui red horizontal label">TIME</div>
+    								<%= @fjob.starttime%> ~ <%=@fjob.endtime%>  == Total <%=@fjob.timetotal%> hours
+  								</a>
+				  			
+				  				<a class="item">
+    								<div class="ui red horizontal label">TIME</div>
+    								<% if @fjob.home_environment.include? "outsidework" %>
                                 <%=@fjob.home_environment%><%=@fjob.location%>
                               <%else%>
                                 <%=@fjob.home_environment%>
                                <%end%>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                              <label for="email"><h4>Career</h4></label><br>
-                             <%= @fjob.career%>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                              <label for="password"><h4>Portfolio Image</h4></label><br>
-                              <%if @fjob.portfolio_img==""%>
+  								</a>
+  								
+  								<a class="item">
+    								<div class="ui red horizontal label">CAREER</div>
+    								<%= @fjob.career%>
+  								</a>
+  								
+  								<a class="item">
+    								<div class="ui red horizontal label">CAREER</div>
+    								<%if @fjob.portfolio_img==""%>
                               No Image <br>
                               <%else%>
-                              <img height="100%" width="100%" src="<%= @fjob.portfolio_img%>"> <br>
+                              <img height="100%" width="100%" src="<%= @fjob.portfolio_img%>"> 
                               <%end%>
-                          
-                      </div>
-                     
-                      <div class="form-group">
-                           <div class="col-xs-12">
-                               
-                            </div>
-                            </div>
-                      
-              	</form>
-              	</div>
-              	 <button class="btn btn-info" id="edit5" ><span class="glyphicon glyphicon-edit"></span> edit</button>
-              	 </div>
-    <div class="form_update" id="form_update_fjob" >         	
-              	<form action="/fjob/update/<%=@fjob.id%>" method "get" >
+  								</a>
+				  
+				  		</form>
+				  		
+				  		<button class="ui button" id="fjobupdate_button" type="submit">수정 하러 가기</button>
+				  	</div>
+				  	</div>
+				  	
+	
+              	 
+          	
+    <form id="fjobupdate" action="/fjob/update/<%=@fjob.id%>" method "get" >
         
     <!--포트폴리오 사진 url -->
       portfolio_img url:<br>
@@ -339,20 +343,23 @@ $("#useredit").click(function() {
         <input type="checkbox" name="fjob_home_environment[]" value="outsidework" >출근<br>
     <%end%>
     <input type="text" name="fjob_location" value= "<%=@fjob.location%>"><%=@fjob.location%> 지역 / OO시 OO군<br>
-  <button type="submit" class="btn btn-primary" >제출</button>
+  <button id="fjobupdated_button" type="submit" class="btn btn-primary" >제출</button>
 </form>
+
+
 </div>
+
 </div>
 			<!--여기까지-->
 			
 			<script>
 				
 				
-$("#form_update_fjob").hide();
+$("#fjobupdate").hide();
 
-$("#edit5").click(function() {
-  $("#blah").hide();
-  $("#form_update_fjob").show();
+$("#fjobupdated_button").click(function() {
+  $("#fjobupdated").hide();
+  $("#fjobupdated").show();
   
   
   $("te").each(function() {
@@ -374,18 +381,143 @@ $("#submit1").click(function() {
 			<div class="ui bottom attached tab segment" data-tab="third">
 			
 			
+			
+			<div class="form-group">
+                <h4>Partner Request</h4>
+               <% @friend.each do |x|%>
+                     <% if x.friend_id == current_user.id%>
+                       <%if x.pending == false%>
+                          <%_user=User.find(x.user_id)%>
+                         <a href="/profile/<%=_user.id%>"><%=_user.name%></a>
+                      	<form action="/friendship/approve" method "get" >
+                            <input type="hidden" name="accept_id" value="<%=x.id%>">
+                            <button type="submit" class="btn btn-primary">accept</button>
+                        </form>
+                        
+                        <form action="/friendship/decline" method "get" >
+                            <input type="hidden" name="decline_id" value="<%=x.id%>">
+                            <button type="submit" class="btn btn-primary">decline</button>
+                        </form>
+                      <%end%>
+                   <%end%>
+              <%end%>
+               </div>
+               <h4>My Partners</h4><br>
+                        <% @friend.each do |x|%>
+                            <%if x.pending ==true%>
+                             <% if x.friend_id == current_user.id%> <!--내가 요청 받아서 친구된 케이스-->
+                                    <%@f_fjob=Fjob.find(x.user_id)%>
+                                    <%@f_user=User.find(x.user_id)%>
+                                    <%@edit_review=Review.find(x.user_id)%>
+                              <!--      <h4>Profile Image</h4><br>-->
+                              <!--      <img height="100%" width="100%" src="<%= @f_user.profile_img%>"> <br>-->
+                              <!--    <h4>Name</h4><br>-->
+                              <!--    <a href="/fjob/profile/<%=@f_user.id%>"><%= @f_user.name%></a>-->
+                              <!--<br>-->
+                            <h4>Review</h4><br>
+                            <form action="/review/update/<%=@f_user.id%>" method "get" >
+                            <div class="ui comments">
+                              <div class="comment">
+                                <a class="avatar">
+                                  <img src="/images/avatar/small/stevie.jpg">
+                                </a>
+                                <div class="content">
+                                  <a href="/fjob/profile/<%=@f_user.id%>"><%= @f_user.name%></a>
+                                  <div class="metadata">
+                                    <div class="rating">
+                                      <i class="star icon"></i>
+                                      <input type="integer" name="n_ratings" value="<%=@edit_review.ratings%>" >
+                                    </div>
+                                  </div>
+                                  <input type="text" name="n_rtext" value="<%=@edit_review.review_text%>"> <br>
+                               <button class="btn btn-info" type="submit" id="submit1"><span class="glyphicon glyphicon-edit"></span> 제출</button>
+                                </div>
+                            
+                            </form>
+                            <!--<form action="/review/update/<%=@f_user.id%>" method "get" >-->
+                            <!--    Ratings:-->
+                            <!--    <div class="ui star rating" data-rating="3" id="wansik"></div>-->
+                            <!--    <input type="integer" name="n_ratings" value="<%=@edit_review.ratings%>"> <br>-->
+                            <!--    <input type="hidden" name="n_rater_id" value="<%=current_user.id%>">-->
+                            <!--    <input type="hidden" name="n_subject_id" value ="<%=@f_user.id%>">-->
+                            <!--    Review_text:-->
+                            <!--    <input type="text" name="n_rtext" value="<%=@edit_review.review_text%>"> <br>-->
+                            <!--    <button type="submit" class="btn btn-primary">제출</button>-->
+                            <!--</form>-->
+                           
+                             <%elsif x.user_id == current_user.id%> <!--내가 먼저 요청해서 친구된 케이스-->
+                                <%@f_fjob=Fjob.find(x.friend_id)%>  
+                                <%@f_user=User.find(x.friend_id)%>
+                                <%@edit_review=Review.find(x.friend_id)%>
+                            <!--     <h4>Profile Image</h4><br>-->
+                            <!--        <img height="100%" width="100%" src="<%= @f_user.profile_img%>"> <br>-->
+                            <!--  <div class="col-xs-6">-->
+                            <!--      <h4>Name</h4><br>-->
+                            <!--      <a href="/fjob/profile/<%=@f_user.id%>"><%= @f_user.name%></a>-->
+                            <!--    </div>-->
+                          
+                     
+                            <!--<h4>Category</h4><br>-->
+                            <!--  <%= @f_fjob.category%> -->
+                            <!--  <br>-->
+                             
+                            <!--  <h4>Review</h4><br>-->
+                            <!--<form action="/review/update/<%=@f_user.id%>" method "get" >-->
+                              <!--  Ratings:-->
+                              <!--   <div class="ui star rating" data-rating="3" id="wansik"></div>-->
+                              <!--  <input type="integer" name="n_ratings" value="<%=@edit_review.ratings%>" >-->
+                              <!--   <br>-->
+                              <!--  <input type="hidden" name="n_rater_id" value="<%=current_user.id%>">-->
+                              <!--  <input type="hidden" name="n_subject_id" value ="<%=@f_user.id%>">-->
+                              <!--  Review_text:-->
+                              <!--  <input type="text" name="n_rtext" value="<%=@edit_review.review_text%>"> <br>-->
+                              <!-- <button class="btn btn-info" type="submit" id="submit1"><span class="glyphicon glyphicon-edit"></span> 제출</button>-->
+                              <!--<button class="btn btn-success" id="save5"><span class="glyphicon glyphicon-save"></span> save</button>-->
+                            <h4>Review</h4><br>
+                            <form action="/review/update/<%=@f_user.id%>" method "get" >
+                            <div class="ui comments">
+                              <div class="comment">
+                                <a class="avatar">
+                                  <img src="/images/avatar/small/stevie.jpg">
+                                </a>
+                                <div class="content">
+                                  <a href="/fjob/profile/<%=@f_user.id%>"><%= @f_user.name%></a>
+                                  <div class="metadata">
+                                    <div class="rating">
+                                      <i class="star icon"></i>
+                                      <input type="integer" name="n_ratings" value="<%=@edit_review.ratings%>" >
+                                    </div>
+                                  </div>
+                                  <input type="text" name="n_rtext" value="<%=@edit_review.review_text%>"> <br>
+                               <button class="btn btn-info" type="submit" id="submit1"><span class="glyphicon glyphicon-edit"></span> 제출</button>
+                                </div>
+                            
+                            </form>
+                            
+                          
+                              </div>
+                            </div>
+                            
+                                <%else%>
+                              <%end%>
+                            <%end%>
+                          <%end%>
+                          </div>
+                          
+                     
 				
 			</div>
-		</div>
+			</div>
+			
 	
 	</div>
 	
-	<div class="actions">
-    <div class="ui primary approve button">
-        Proceed
-        <i class="right chevron icon"></i>
-    </div>
-  </div>
+	<!--<div class="actions">-->
+ <!--   <div class="ui primary approve button">-->
+ <!--       Proceed-->
+ <!--       <i class="right chevron icon"></i>-->
+ <!--   </div>-->
+ <!-- </div>-->
     
 </div>
 
@@ -485,96 +617,131 @@ $("#submit1").click(function() {
 						<form class="ui form" action="/fjob/search_result" method="post">
 							<!--category-->
 							<div class="field">
-							<div> <h4 class="ui header">CATEGORY</h4> </div>
+							<label>CATEGORY</label>
 							<div class="ui fluid mini multiple search selection dropdown">
 							  <input name="tags" type="hidden">
 							  <i class="dropdown icon"></i>
-							  <div class="default text">SELECT!</div>
+							  <div class="default text">SELECT !</div>
 							  <div class="menu">
-							    <div class="item" name="create" data-value="create">CREATOR</div>
-									<div class="item" name="edit" data-value="edit">EDITOR</div>
-									<div class="item" name="write" data-value="write">WRITER</div>
-									<div class="item" name="photo" data-value="photo">PHOTOGRAPHER</div>
-									<div class="item" name="trans" data-value="trans">TRANSLATOR</div>
-									<div class="item" name="design" data-value="design">DESIGNER</div>
-									<div class="item" name="market" data-value="market">MARKETER</div>
-									<div class="item" name="etc" data-value="etc">ETC</div>
+							    <div class="item" name="create" id="create" data-value="create">CREATOR</div>
+									<div class="item" name="edit" id ="edit"data-value="edit">EDITOR</div>
+									<div class="item" name="write" id ="write" data-value="write">WRITER</div>
+									<div class="item" name="photo" id ="photo" data-value="photo">PHOTOGRAPHER</div>
+									<div class="item" name="trans" id="trans" data-value="trans">TRANSLATOR</div>
+									<div class="item" name="design" id="design" data-value="design">DESIGNER</div>
+									<div class="item" name="market" id="market" data-value="market">MARKETER</div>
+									<div class="item" name="etc" id ="etc" data-value="etc">ETC</div>
 							  </div>
 							</div>
 							</div>
 							
 							<!--day-->
 							<div class="field">
-							<div> <h4 class="ui header">DAY</h4> </div>
+							<label>DAY</label>
 							<div class="ui fluid mini multiple search selection dropdown">
 							  <input name="tags" type="hidden">
 							  <i class="dropdown icon"></i>
-							  <div class="default text">SELECT!</div>
+							  <div class="default text">SELECT !</div>
 							  <div class="menu">
-							    <div class="item" name="mon" data-value="mon">Mon</div>
-									<div class="item" name="tue" data-value="tue">Tue</div>
-									<div class="item" name="wen" data-value="wen">Wen</div>
-									<div class="item" name="thu" data-value="thu">Thu</div>
-									<div class="item" name="fri" data-value="fri">Fri</div>
-									<div class="item" name="sat" data-value="sat">Sat</div>
-									<div class="item" name="sun" data-value="sun">Sun</div>
+							    <div class="item" name="mon" id ="mon" data-value="mon">Mon</div>
+									<div class="item" name="tue" id ="tue" data-value="tue">Tue</div>
+									<div class="item" name="wen" id="wen" data-value="wen">Wen</div>
+									<div class="item" name="thu" id="thu" data-value="thu">Thu</div>
+									<div class="item" name="fri" id="fri" data-value="fri">Fri</div>
+									<div class="item" name="sat" id="sat" data-value="sat">Sat</div>
+									<div class="item" name="sun" id="sun" data-value="sun">Sun</div>
 							  </div>
 							</div>
 							</div>
 							
+							<div class="fields">
 							<!--workat-->
-							<div class="field">
-							<div> <h4 class="ui header">WORK AT</h4> </div>
+							<div class="eight wide field">
+							<label>WORK AT</label>
 							<div class="ui fluid mini multiple search selection dropdown">
 							  <input name="tags" type="hidden">
 							  <i class="dropdown icon"></i>
-							  <div class="default text">SELECT!</div>
+							  <div class="default text">SELECT !</div>
 							  <div class="menu">
-							    <div class="item" name="home" data-value="home">HOME</div>
-									<div class="item" name="office" data-value="office">OFFICE</div>
+							    <div class="item" name="home" id="home" data-value="home">HOME</div>
+									<div class="item" name="office" id="office" data-value="office">OFFICE</div>
 							  </div>
 							</div>
 							</div>
 							
-							<div class="field">
-							<div> <h4 class="ui header">TIME</h4> </div>
-							<div class="ui mini right labeled input">
-								<input type="number" min="0" max="24" placeholder="12" id="start_time"name="start_time">
-							  <div class="ui basic label">시 부터</div>
+							
+							<div class="eight wide field">
+								<label>LOCATION</label>
+								<div class="two fields">
+									<div class="field">
+										<div class="ui mini right labeled input">
+										<input type="text" placeholder="서울" id="city" name="city">
+							  		<div class="ui basic label">시</div>
+							  	</div>
+							  </div>
 							  
-								<input type="number" min="0" max="24" placeholder="12" id="end_time"name="end_time">
-							  <div class="ui basic label">시 까지</div>
+							  <div class="field">
+							  	<div class="ui mini right labeled input">
+							  		<input type="text" placeholder="노원" id="gu" name="gu">
+							  		<div class="ui basic label">구</div>
+							  	</div>
+							  </div>
 							</div>
+						</div>
+							
+							
+							
 							</div>
 							
-							<div class="field">
-							<div class="six wide field">
-							<div> <h4 class="ui header">TOTAL TIME</h4> </div>
-							<div class="ui mini right labeled input">
-							<input class="two wide" type="number" min="0" max="12" placeholder="12" id="working_time"name="working_time">
-							<div class="ui basic label">시간</div>
-							</div>
-							</div>
 							
-							<div class="six wide field">
-							<div> <h4 class="ui header">CONTRACT</h4> </div>
-							<div class="ui mini right labeled input">
-								<input type="number" min="0" max="24" placeholder="12" id="contract"name="contract">
-							  <div class="ui basic label">개월</div>
-							</div>
-							</div>
-							</div>
-							
-							<div class="field">
-							<div> <h4 class="ui header">LOCATION</h4> </div>
-							<div class="ui mini right labeled input">
-								<input type="text" placeholder="서울" id="city" name="city">
-							  <div class="ui basic label">시</div>
+							<div class="fields">
+								
+								<div class="eight wide field">
+									<label>TIME</label>
+									<div class="two fields">
+										
+										<div class="field">
+											<div class="ui mini right labeled input">
+												<input type="number" min="0" max="24" placeholder="12" id="start_time"name="start_time">
+							 					<div class="ui basic label">시 부터</div>
+							  			</div>
+							  		</div>
 							  
-							  <input type="text" placeholder="노원" id="gu" name="gu">
-							  <div class="ui basic label">구</div>
+							  
+							  		<div class="field">
+							  			<div class="ui mini right labeled input">
+												<input type="number" min="0" max="24" placeholder="12" id="end_time"name="end_time">
+							  				<div class="ui basic label">시 까지</div>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+							
+								<div class="four wide field">
+									<label>TOTAL TIME</label>
+									<div class="field">
+									<div class="ui mini right labeled input">
+										<input type="number" min="0" max="12" placeholder="12" id="working_time"name="working_time">
+										<div class="ui basic label">시간</div>
+									</div>
+								</div>
+								</div>
+							
+								<div class="four wide field">
+									<label>CONTRACT</label>
+									<div class="field">
+									<div class="ui mini right labeled input">
+										<input type="number" min="0" max="24" placeholder="12" id="contract"name="contract">
+								  	<div class="ui basic label">개월</div>
+									</div>
+								</div>
+								</div>
+							
 							</div>
-							</div>
+
+							
+
 							
 							
 							
@@ -713,14 +880,12 @@ $("#submit1").click(function() {
 					</div>
 				</div>
 			</div>
-			
 			</div>
 		</div>
 	
 	<!--section 2-->	
 	<div class="section" id="section2">
 		<div class="content" id = "content2">
-			
 			
 			<div class="section_title" id ="section_title2">
 				<div class="section2_title">
@@ -767,10 +932,12 @@ $("#submit1").click(function() {
 										<p>	<%num=creator_arr.fetch(rand_num)%>
 											<%r_creator=Fjob.find(num)%>
 											<%r_creator_user=User.find(num)%>
+											
+											<a href="/fjob/profile/<%=r_creator_user.id%>">
 											<%=r_creator_user.name%>
 											<%=r_creator_user.nickname%>
 											<%=r_creator.category%>
-										
+										</a>
 											<% @myreview=Review.all%>
           							 <%sum=0%>
 		    									<%num_count=0%>
@@ -803,10 +970,11 @@ $("#submit1").click(function() {
 											<%r_editor=Fjob.find(num)%>
 											<%r_editor_user=User.find(num)%>
 											<%r_editor_review=Review.find(num)%>
+												<a href="/fjob/profile/<%=r_editor_user.id%>">
 											<%=r_editor_user.name%>
 											<%=r_editor_user.nickname%>
 											<%=r_editor.category%>
-											
+											</a>
 											<% @myreview=Review.all%>
           							 <%sum=0%>
 		    									<%num_count=0%>
@@ -839,9 +1007,11 @@ $("#submit1").click(function() {
 											<%r_designer=Fjob.find(num)%>
 											<%r_designer_user=User.find(num)%>
 											<%r_designer_review=Review.find(num)%>
+												<a href="/fjob/profile/<%=r_designer_user.id%>">
 											<%=r_designer_user.name%>
 											<%=r_designer_user.nickname%>
 											<%=r_designer.category%>
+											</a>
 											<% @myreview=Review.all%>
           							 <%sum=0%>
 		    									<%num_count=0%>
@@ -874,10 +1044,11 @@ $("#submit1").click(function() {
 											<%r_producer=Fjob.find(num)%>
 											<%r_producer_user=User.find(num)%>
 											<%r_producer_review=Review.find(num)%>
+												<a href="/fjob/profile/<%=r_producer_user.id%>">
 											<%=r_producer_user.name%>
 											<%=r_producer_user.nickname%>
 											<%=r_producer.category%>
-											
+											</a>
 											<% @myreview=Review.all%>
           							 <%sum=0%>
 		    									<%num_count=0%>
@@ -911,10 +1082,11 @@ $("#submit1").click(function() {
 											<%r_translator=Fjob.find(num)%>
 											<%r_translator_user=User.find(num)%>
 											<%r_translator_review=Review.find(num)%>
+												<a href="/fjob/profile/<%=r_translator_user.id%>">
 											<%=r_translator_user.name%>
 											<%=r_translator_user.nickname%>
 											<%=r_translator.category%>
-											
+											</a>
 											<% @myreview=Review.all%>
           							 <%sum=0%>
 		    									<%num_count=0%>
@@ -947,10 +1119,11 @@ $("#submit1").click(function() {
 											<%r_writer=Fjob.find(num)%>
 											<%r_writer_user=User.find(num)%>
 											<%r_writer_review=Review.find(num)%>
+												<a href="/fjob/profile/<%=r_writer_user.id%>">
 											<%=r_writer_user.name%>
 											<%=r_writer_user.nickname%>
 											<%=r_writer.category%>
-											
+											</a>
 											<% @myreview=Review.all%>
           							 <%sum=0%>
 		    									<%num_count=0%>

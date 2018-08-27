@@ -409,7 +409,8 @@ i.small.icons {
 }
 i.icon,
 i.icons {
-  font-size: 1em;
+  font-size: 1.5em;
+  color: black;
 }
 i.large.icon,
 i.large.icons {

@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     get '/fjob/edit/:id'=> 'fjob#edit'
     get '/fjob/update/:id'=> 'fjob#update'
     get '/friendship/decline'=>'friendship#decline'
+    get '/friendship/approve' => 'friendship#approve'
     get '/fjob/user_update/:id'=>'fjob#user_update'
     get '/fjob/search_result' => 'fjob#search_result'
     post '/fjob/search_result'

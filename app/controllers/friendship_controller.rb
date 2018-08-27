@@ -9,8 +9,10 @@ class FriendshipController < ApplicationController
   end
   
   def approve
-    @friend=Friendship.all
-    
+    @friend=Friendship.find(params[:accept_id])
+    @friend.pending=1
+    @friend.save
+    redirect_to'/'
   end
 
   def decline

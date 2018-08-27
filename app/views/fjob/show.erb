@@ -377,9 +377,10 @@ show html
                        <%if x.pending == false%>
                           <%_user=User.find(x.user_id)%>
                          <a href="/profile/<%=_user.id%>"><%=_user.name%></a>
-                        <button onclick="<%x.pending =1 %>">accept</button>
-                        <%x.save%>
-                        <%end%>
+                         <form action="/friendship/approve" method "get" >
+                            <input type="hidden" name="accept_id" value="<%=x.id%>">
+                            <button type="submit" class="btn btn-primary">accept</button>
+                        </form>
                         
                         <form action="/friendship/decline" method "get" >
                             <input type="hidden" name="decline_id" value="<%=x.id%>">
@@ -455,6 +456,27 @@ show html
                                <button class="btn btn-info" type="submit" id="submit1"><span class="glyphicon glyphicon-edit"></span> 제출</button>
                               <button class="btn btn-success" id="save5"><span class="glyphicon glyphicon-save"></span> save</button>
                             </form>
+                            
+                            
+                            
+                            <!--<div class="ui comments">-->
+                            <!--    <div class="comment">-->
+                            <!--        <a class="avatar">-->
+                            <!--            <img  src="<%= @f_user.profile_img%>">-->
+                            <!--        </a>-->
+                            <!--    <div class="content">-->
+                            <!--        <a href="/fjob/profile/<%=@f_user.id%>"><%= @f_user.name%></a>-->
+                            <!--        <div class="metadata">-->
+                            <!--            <i class="star icon"></i>-->
+                            <!--            <input type="integer" name="n_ratings" value="<%=@edit_review.ratings%>" >-->
+                            <!--        </div>-->
+                            <!--        Review_text:-->
+                            <!--        <input type="text" name="n_rtext" value="<%=@edit_review.review_text%>">-->
+                            <!--        <button class="btn btn-info" type="submit" id="submit1"><span class="glyphicon glyphicon-edit"></span> 제출</button>-->
+                            <!--    </div>-->
+                            <!--    </div>-->
+                            <!--</div>-->
+                            <!--<script https://semantic-ui.com/dist/semantic.min.css></script>-->
                                 <%else%>
                               <%end%>
                             <%end%>

@@ -55,8 +55,8 @@
 
 
 
-<%if @search_data.count() != 0%>
-    <%if @search_data.count() == 0%>
+<%if @check_data.nil?%>
+    <%if @search_data.nil? or (@search_data.count() == 0)%>
         검색결과 없음
     <%else%>
         <% @search_data.each do |user| %>
@@ -94,17 +94,29 @@
                         <i class="user icon"></i>
                         
                     </span>
+                    <%result_friend=Friendship.all%>
                     Review_text : <%=user_r.review_text%> <br>
                     <%if @c_user == 'no resert'%>
-                    	<%else%>
-		                    <%if user.id != @c_user.id%>
-			                    <form action="/friendship/invite" method "post" >
-			                    <input type="hidden" name="receiver" value="<%=user.id%>" ><!--받는 사람-->
-			                    <input type="hidden" name="requester" value="<%=current_user.id%>">
-			                    <input type= "hidden" name = "bool" value = "false">
-			                    <button type="submit" class="btn btn-primary">친구요청</button>
-			                    </form>
+                    <%else%>
+                    <%out=0%>
+		                    <%result_friend.each do |f|%>
+		                    		<%if (f.user_id==current_user.id) && (f.friend_id==searched_user.id)%>
+		                    			<%out=1%>
+		                    		<%elsif (f.friend_id==current_user.id) && (f.user_id==current_user.id)%>
+		                    			<%out=1%>
+		                    		<%end%>
 		                    <%end%>
+		                    <%if searched_user.id==current_user.id%>
+		                    	<%out=1%>
+		                    <%end%>
+		                 <%if out==0%>
+		                  		<form action="/friendship/invite" method "post" >
+			                    		<input type="hidden" name="receiver" value="<%=user.id%>" ><!--받는 사람-->
+			                    		<input type="hidden" name="requester" value="<%=current_user.id%>">
+			                    		<input type= "hidden" name = "bool" value = "false">
+			                    		<button type="submit" class="btn btn-primary">친구요청</button>
+			                    	</form>
+			              <%end%>
                     <%end%>
                 </div>
 
@@ -114,7 +126,7 @@
     <% end %>
 <%else%>
 
-    <%if @check_data.count() == 0%>
+    <%if @check_data.nil? or (@check_data.count() == 0)%>
         검색결과 없음
         
     <%else%>
@@ -176,8 +188,8 @@
 <%end%>
 
 
-<!--<div id="js-btn-wrap" class="btn-wrap"> <a href="javascript:;" class="button" id="loadmore_button">LOAD MORE</a> </div>-->
-<!--</div>-->
+<div id="js-btn-wrap" class="btn-wrap"> <a href="javascript:;" class="button" id="loadmore_button">LOAD MORE</a> </div>
+</div>
 
 <!--    <div class="ui large longer modal individual">-->
     	
@@ -353,7 +365,7 @@
 			
 			</div>
 </div>
-</div>
+
 </form>
 </div>
 <script
